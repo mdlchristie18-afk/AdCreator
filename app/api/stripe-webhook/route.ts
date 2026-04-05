@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { createAdminClient } from '@/lib/supabase-admin'
+import { createAdminClient } from '@/lib/supabase-server'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
 
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient()
 
   if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.CheckoutSession
+    const session = event.data.object as Stripe.Response<Stripe.Checkout.Session>
     const userId = session.metadata?.user_id
     if (userId) {
       await supabase.from('users').upsert({ id: userId, is_pro: true, stripe_customer_id: session.customer as string })
