@@ -7,9 +7,9 @@ export async function POST(req: NextRequest) {
   try {
     const { product, benefit, audience, cta, platform, tone, variants } = await req.json()
 
-    const prompt = `You are a world-class advertising copywriter who has worked at top agencies like Ogilvy, BBDO, and Wieden+Kennedy. You write ads that stop people mid-scroll and make them take action.
+    const prompt = `You are a world-class advertising copywriter who has worked at Ogilvy, BBDO, and Wieden+Kennedy. You write long-form, high-converting ads that tell a story, build desire, and drive action.
 
-Create ${variants} completely different, high-converting ad variant(s) for:
+Create ${variants} completely different, detailed, long-form ad variant(s) for:
 
 Product: ${product}
 Key benefit: ${benefit}
@@ -18,28 +18,27 @@ Call to action: ${cta || 'Learn more'}
 Platform: ${platform}
 Tone: ${tone}
 
-Platform-specific rules:
-- Facebook/Instagram: Hook in first line, conversational, emojis ok, 125 chars for body, punch CTA
-- Google Search: Keyword-rich headline max 30 chars, benefit-focused description max 90 chars, clear CTA
-- LinkedIn: Professional, lead with insight or stat, speak to business outcomes
-- TikTok: Extremely casual, trending language, FOMO-driven, short punchy sentences
-- Twitter/X: Witty or bold, under 280 chars total, conversation-starting
-- Email: Compelling subject line, personalized opener, clear single CTA
+Requirements for each ad:
+- Headline: Bold, attention-grabbing, 10-15 words
+- Body: LONG and detailed — minimum 150 words. Tell a story. Paint a picture of life before and after using this product. Address objections. Build desire. Use specific details, vivid language, and emotional triggers. Include social proof language. Make the reader feel something.
+- CTA: Strong, urgent, specific
 
-Rules for great copy:
-- Open with a hook that speaks directly to a pain point or desire
-- Use specific numbers and details when possible (not "save time" but "save 3 hours a day")
-- Create urgency or FOMO naturally
-- Speak TO the audience, not AT them
-- Every word must earn its place — cut anything weak
-- Make each variant feel completely different in angle and approach
+Platform tone guide:
+- Facebook/Instagram: Storytelling, relatable, emotional, conversational
+- Google Search: Benefit-stacked, specific, trust-building
+- LinkedIn: Data-driven, professional, ROI-focused, thought leadership angle
+- TikTok: Raw, authentic, trending, FOMO-heavy, youth culture
+- Twitter/X: Bold takes, punchy, polarizing, share-worthy
+- Email: Personal, warm, detailed, like a letter from a friend
+
+Make each variant take a completely different angle — different emotion, different hook, different story.
 
 Respond ONLY with a valid JSON array. No markdown, no backticks, no explanation. Format:
 [{"variant":1,"headline":"...","body":"...","cta":"..."}]`
 
     const message = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
-      max_tokens: 1500,
+      max_tokens: 3000,
       messages: [{ role: 'user', content: prompt }]
     })
 
